@@ -184,8 +184,6 @@ namespace ChatBot
                 string accessToken = await OAuth.GetAccessToken(OAuth.eScope.clips);
                 var result = TwitchAPIFactory.GetAPI().Helix.Clips.CreateClipAsync(broadcastorID, accessToken);
 
-                Say("Trying to generate clip...");
-
                 await Task.Delay(15 * 1000).ContinueWith((a) => {
                     string clipURL = result.Result.CreatedClips.First().EditUrl;
 

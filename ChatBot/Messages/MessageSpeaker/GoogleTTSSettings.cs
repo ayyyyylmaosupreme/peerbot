@@ -18,6 +18,9 @@ namespace ChatBot.Messages.MessageSpeaker
         public static double MaxTTSSpeed = 2;
         public static double MinTTSPitch = -20;
         public static double MaxTTSPitch = 20;
+
+        public static TextToSpeechClient ttsClient = null;
+
         public enum eDialects
         {
             australian,
@@ -44,7 +47,10 @@ namespace ChatBot.Messages.MessageSpeaker
 
         public static TextToSpeechClient GetTTSClient()
         {
-            TextToSpeechClient ttsClient = TextToSpeechClient.Create();
+            
+            if (ttsClient is null)
+                ttsClient = TextToSpeechClient.Create();
+            
             return ttsClient;
         }
 

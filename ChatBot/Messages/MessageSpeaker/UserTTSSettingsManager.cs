@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
+using Google.Cloud.TextToSpeech.V1;
+using System.Linq;
 
 namespace ChatBot.Messages.MessageSpeaker
 {
@@ -14,6 +16,11 @@ namespace ChatBot.Messages.MessageSpeaker
     {
         static object locker = new object();
         static string filePath = @"../" + Config.fileSavePath + "speechsettings.txt";
+        static List<string> LanguageCodes = new List<string> { "da-DK", "en-AU", "en-GB", "en-US", "fr-CA", "fr-FR", "de-DE", "it-IT",
+        "ja-JP", "ko-KR", "ru-RU", "es-ES"};
+
+
+        public static ListVoicesResponse GoogleVoices = null;
 
         public static void SaveSettingsToStorage(UserTTSSettings messageSpeakerSettings)
         {
@@ -126,6 +133,26 @@ namespace ChatBot.Messages.MessageSpeaker
             }
             else
                 return TTSSettings.GetDefaultVoice();
+        }
+
+        public static TTSSettings GenerateRandomVoice()
+        {
+            try
+            {
+                if (GoogleVoices is null)
+                    GoogleVoices = GoogleTTSSettings.GetTTSClient().ListVoices(new Google.Cloud.TextToSpeech.V1.ListVoicesRequest { });
+
+                var RandomVoice = GoogleVoices.Voices.Where(o => LanguageCodes.Contains(o.LanguageCodes.First())).ToList();
+
+                TTSSettings randomVoice = new TTSSettings();
+            }
+            catch (Exception e)
+            {
+                SystemLogger.Log("Failed to fetch google voices while generating a random voice. " + e.ToString());
+            }
+
+
+            return null;
         }
     }
 }
